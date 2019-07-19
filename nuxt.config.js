@@ -3,7 +3,11 @@ import pkg from './package'
 module.exports = {
   mode: 'universal',
   srcDir: 'app',
-
+  router: {
+    middleware: [
+      'auth-cookie'
+    ]
+  },
   /*
   ** Headers of the page
   */
