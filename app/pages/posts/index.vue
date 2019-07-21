@@ -7,6 +7,7 @@
       <el-table
         :data="showPosts"
         style="width: 100%"
+        @row-click="handleClick"
         class="table"
       >
         <el-table-column
@@ -29,32 +30,28 @@
 </template>
 
 <script>
-  export default {
-    computed: {
-      showPosts() {
-        return [
-          {
-            id: '001',
-            title: 'How to development Nuxt.js Application',
-            body: 'テスト',
-            created_at: '2019/07/11 12:00:00',
-            user: {
-              id: 'shimabukuro'
-            }
-          },
-          {
-            id: '002',
-            title: 'How to development Nuxt.js Application',
-            body: 'テスト2',
-            created_at: '2019/07/12 12:00:00',
-            user: {
-              id: 'shimabukuro'
-            }
-          },
-        ]
-      }
+import moment from '~/plugins/moment'
+import { mapGetters } from 'vuex'
+
+export default {
+  async asyncData({ store }){
+    await store.dispatch('posts/fetchPosts')
+  },
+  computed: {
+    showPosts(){
+      return this.posts.map(post => {
+        post.created_at = moment(post.created_at).format('YYYY/MM/DD HH:mm:ss')
+        return post
+      })
+    },
+    ...mapGetters('posts', ['posts'])
+  },
+  methods: {
+    handleClick(post){
+      this.$router.push(`/posts/${post.id}`)
     }
   }
+}
 </script>
 
 <style>
