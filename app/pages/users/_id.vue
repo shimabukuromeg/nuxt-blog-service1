@@ -24,6 +24,7 @@
           <el-table
             :data="userPosts"
             style="width: 100%"
+            @row-click="handleClick"
             class="table"
           >
             <el-table-column
@@ -48,6 +49,7 @@ import {mapGetters} from 'vuex'
 
 export default {
   async asyncData({store, route, error}) {
+    await store.dispatch('posts/fetchPosts')
     const {id} = route.params
     try {
       await store.dispatch('users/fetchUser', {id})
@@ -68,6 +70,11 @@ export default {
       return Object.assign({posts: []}, user)
     },
     ...mapGetters('users',['users'])
+  },
+  methods: {
+    handleClick(post){
+      this.$router.push(`/posts/${post.id}`)
+    }
   }
 }
 </script>
